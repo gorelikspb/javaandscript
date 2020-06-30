@@ -38,22 +38,18 @@ function statement(invoice) {
         }).format;
 
     for (let perf of invoice.performance) {
-        // const play = plays[perf.playlD];
+        // стоимость постановки
         const thisAmount = perfAmount(perf);
+        // бонусы за постановку
+        volumeCredits += perfCredits(perf);
 
-        // Добавление бонусов
-        volumeCredits += Math.max(perf.audience - 30, 0);
-        // Дополнительный бонус за каждые 10 зрителей
-        if ("comedy" === perf.type) volumeCredits += Math.floor(perf.audience / 5);
         // Вывод строки счета
         result += `- ${perf.playId}: ${format(thisAmount)}`;
         result += ` (${perf.audience} мест)\n <br>`;
         totalAmount += thisAmount;
-
-
     }
-    result += `Итого с вас ${format(totalAmount)}\n <br>`;
 
+    result += `Итого с вас ${format(totalAmount)}\n <br>`;
     result += `Вы заработали ${volumeCredits} бонусов\n <br>`;
     // console.log(result);
     return result;
@@ -82,7 +78,15 @@ function perfAmount(perf) {
     return thisAmount;
 }
 
+function perfCredits(perf) {
+    let thisCredits = 0;
+    // Добавление бонусов
+    thisCredits += Math.max(perf.audience - 30, 0);
+    // Дополнительный бонус за каждые 10 зрителей
+    if ("comedy" === perf.type) thisCredits += Math.floor(perf.audience / 5);
 
+    return thisCredits;
+}
 
 const result = statement(invoices[0]);
 
