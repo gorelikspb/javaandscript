@@ -37,17 +37,25 @@ function statement(invoice) {
             minimumFractionDigits: 2
         }).format;
 
+
+
+    // стоимость постановки
     for (let perf of invoice.performance) {
-        // стоимость постановки
-        const thisAmount = perfAmount(perf);
-        // бонусы за постановку
+        result += `- ${perf.playId}: ${format(perfAmount(perf))}`;
+        result += ` (${perf.audience} мест)\n <br>`;
+    }
+
+    // Вывод строки счета
+    for (let perf of invoice.performance) {
+        totalAmount += perfAmount(perf);
+    }
+    // бонусы за постановку        
+    for (let perf of invoice.performance) {
         volumeCredits += perfCredits(perf);
 
-        // Вывод строки счета
-        result += `- ${perf.playId}: ${format(thisAmount)}`;
-        result += ` (${perf.audience} мест)\n <br>`;
-        totalAmount += thisAmount;
     }
+
+
 
     result += `Итого с вас ${format(totalAmount)}\n <br>`;
     result += `Вы заработали ${volumeCredits} бонусов\n <br>`;
